@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="grid_state_pressed">#BB561e14</color>
+    <color name="grid_state_focused">#77561e14</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+
+    <color name="color_pink">#e95374</color>
+    <color name="color_dark_pink">#c42c54</color>
+    <color name="color_light_gray">#d1d2d4</color>
+    <color name="color_little_gray">#e6e7e8</color>
+    <color name="color_dark_transparent">#37000000</color>
+
+    <color name="color_text_normal">#ffffff</color>
+    <color name="color_text_pressed">#070707</color>
+
+</resources>
