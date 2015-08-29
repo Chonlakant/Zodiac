@@ -16,18 +16,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginBuilder;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import co.co.aq.testnoti.R;
 
 
-public class ActivityDate extends AppCompatActivity {
+public class ActivityDate extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private static final int LOGIN_REQUEST = 0;
     private static final String[] CONTENT = new String[]{"ARIES", "TAURUS", "GEMINI", "CANCER",
@@ -35,100 +38,62 @@ public class ActivityDate extends AppCompatActivity {
             "PISCES"};
     private ParseUser currentUser;
 
-    private Button loginOrLogoutButton;
     ParseObject Zodiac;
-    private Spinner spinner1;
-    int v;
+
+    public static final String DATEPICKER_TAG = "datepicker";
+    int daySelect;
+    int monthSelect;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date);
 
-        final EditText etDate = (EditText) findViewById(R.id.editText);
-
-        Button btn = (Button) findViewById(R.id.button);
-        loginOrLogoutButton = (Button) findViewById(R.id.login_or_logout_button);
-
-
-        spinner1 = (Spinner) findViewById(R.id.spinner1);
-        List<Integer> list = new ArrayList<Integer>();
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        list.add(5);
-
-        ArrayAdapter<Integer> dataAdapter = new ArrayAdapter<Integer>
-                (getApplicationContext(), android.R.layout.simple_spinner_item,list);
-
-        dataAdapter.setDropDownViewResource
-                (android.R.layout.simple_spinner_dropdown_item);
-
-        spinner1.setAdapter(dataAdapter);
-
-        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-                v = (int) spinner1.getItemAtPosition(i);
-                Log.e("1111",v+"");
-            }
-
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
 
         Zodiac = new ParseObject("Zodiac");
 
+        final Calendar calendar = Calendar.getInstance();
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), false);
 
-                String stringDay = etDate.getText().toString();
-                final int day = Integer.parseInt(stringDay);
 
-            //ตอนเรียกใช้Fucntion แต่ไม่รู้ว่าส่งไปถูกหรือป่าวครับ แต่ข้อมูลก็ขึ้นไปนะครับ
-                getZodiac(day, v);
-                Zodiac.put("ZodiacTitle", getZodiac(day, v));
-                Zodiac.saveInBackground();
+        datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
 
-                Intent i = new Intent(getApplication(),MainActivityZodiac.class);
-                startActivity(i);
+        findViewById(R.id.dateButton).setOnClickListener(new View.OnClickListener() {
 
-            }
-        });
-
-        loginOrLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentUser != null) {
-                    // User clicked to log out.
-                    ParseUser.logOut();
-                    currentUser = null;
-                    ParseLoginBuilder loginBuilder = new ParseLoginBuilder(ActivityDate.this);
-                    startActivityForResult(loginBuilder.build(), LOGIN_REQUEST);
-                    showProfileLoggedOut();
-                }
+
+                datePickerDialog.setYearRange(1985, 2028);
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
         });
+
+        if (savedInstanceState != null) {
+            DatePickerDialog dpd = (DatePickerDialog) getSupportFragmentManager().findFragmentByTag(DATEPICKER_TAG);
+            if (dpd != null) {
+                dpd.setOnDateSetListener(this);
+            }
+        }
+
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        Toast.makeText(ActivityDate.this, "new date:" + year + "-" + month + "-" + day, Toast.LENGTH_LONG).show();
+        daySelect = day;
+        monthSelect = month;
+        Log.e("Day",daySelect+"");
+        Log.e("Month", monthSelect + "");
 
-        currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
+        getZodiac(daySelect, monthSelect);
 
-        } else {
-            showProfileLoggedOut();
-        }
+        Zodiac.put("ZodiacTitle", getZodiac(daySelect, monthSelect));
+        Zodiac.saveInBackground();
+
+        Intent i =new Intent(getApplication(),ResultZodiac.class);
+        i.putExtra("result", getZodiac(daySelect, monthSelect));
+        startActivity(i);
+
     }
 
     public String getZodiac(int day,int month) {
@@ -171,8 +136,5 @@ public class ActivityDate extends AppCompatActivity {
             return null;
 
         }
-    }
-    private void showProfileLoggedOut() {
-        loginOrLogoutButton.setText("Log out");
     }
 }

@@ -1,8 +1,10 @@
-package co.co.aq.testnoti;
+package co.co.aq.testnoti.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+
+import co.co.aq.testnoti.R;
 
 public class ZodiacActivity extends AppCompatActivity {
     TextView titleTv;

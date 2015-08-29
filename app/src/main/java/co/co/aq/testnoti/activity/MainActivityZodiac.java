@@ -14,7 +14,6 @@ import android.widget.GridView;
 
 import co.co.aq.testnoti.R;
 import co.co.aq.testnoti.adapter.ImageAdapter;
-import co.co.aq.testnoti.two;
 
 
 public class MainActivityZodiac extends AppCompatActivity {

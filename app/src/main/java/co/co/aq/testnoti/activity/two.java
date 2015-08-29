@@ -1,4 +1,4 @@
-package co.co.aq.testnoti;
+package co.co.aq.testnoti.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import co.co.aq.testnoti.R;
+import co.co.aq.testnoti.RoundedTransformation;
 import co.co.aq.testnoti.adapter.BadAdapter;
 import co.co.aq.testnoti.adapter.CelebsEnAdapter;
 import co.co.aq.testnoti.adapter.CelebsTnAdapter;
